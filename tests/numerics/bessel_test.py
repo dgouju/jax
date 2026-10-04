@@ -50,6 +50,14 @@ def _mpmath_i1e(x):
   return mpmath.besseli(1, x) * mpmath.exp(-abs(x))
 
 
+# Chebyshev polynomial to asymptotic expansion crossover boundary at |x| = 8.0
+# in Cephes/XLA's bessel_i0e and bessel_i1e approximations, plus nearby
+# transition points.
+_BESSEL_INTERESTING_POINTS = [
+    *(sign * v for v in (3.75, 7.75, 8.0, 8.25) for sign in (-1, 1)),
+]
+
+
 @jtu.thread_unsafe_test_class()
 class BesselI0eTest(jtu.JaxTestCase):
 
@@ -67,6 +75,7 @@ class BesselI0eTest(jtu.JaxTestCase):
         _mpmath_i0e,
         dtype,
         bounds=bounds,
+        interesting_points=_BESSEL_INTERESTING_POINTS,
     )
 
 
@@ -88,6 +97,7 @@ class BesselI1eTest(jtu.JaxTestCase):
         _mpmath_i1e,
         dtype,
         bounds=bounds,
+        interesting_points=_BESSEL_INTERESTING_POINTS,
     )
 
 
