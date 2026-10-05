@@ -77,7 +77,11 @@ Reading from a `Ref` like this returns a `jax.Array`.
 We then write `x + y` to `o_ref`.
 Mutation has not historically been supported in JAX -- `jax.Array`s are immutable!
 `Ref`s are new (experimental) types that allow mutation under certain circumstances.
-We can interpret writing to a `Ref` as mutating its underlying buffer.
+We can interpret writing to a `Ref` as mutating its underlying buffer. 
+
+`Ref` dtypes must match to avoid hidden precision loss or conversion instructions in 
+kernels. Requiring an explicit `.astype()` ensures the kernel author is aware of 
+both the precision truncation and the conversion instruction.
 
 **Indexing and Slicing `Ref`s with `.at`**
 
